@@ -634,16 +634,18 @@ exit:
 }
 
 /**
- * device_add_disk - add partitioning information to kernel list
+ * __device_add_disk - add disk information to kernel list
  * @parent: parent device for the disk
  * @disk: per-device partitioning information
+ * @register_queue: register the queue if set to true
  *
  * This function registers the partitioning information in @disk
  * with the kernel.
  *
  * FIXME: error handling
  */
-void device_add_disk(struct device *parent, struct gendisk *disk)
+static void __device_add_disk(struct device *parent, struct gendisk *disk,
+			      bool register_queue)
 {
 	struct backing_dev_info *bdi;
 	dev_t devt;
@@ -680,7 +682,8 @@ void device_add_disk(struct device *parent, struct gendisk *disk)
 	blk_register_region(disk_devt(disk), disk->minors, NULL,
 			    exact_match, exact_lock, disk);
 	register_disk(parent, disk);
-	blk_register_queue(disk);
+	if (register_queue)
+		blk_register_queue(disk);
 
 	/*
 	 * Take an extra ref on queue which will be put on disk_release()
@@ -695,7 +698,18 @@ void device_add_disk(struct device *parent, struct gendisk *disk)
 	disk_add_events(disk);
 	blk_integrity_add(disk);
 }
+
+void device_add_disk(struct device *parent, struct gendisk *disk)
+{
+	__device_add_disk(parent, disk, true);
+}
 EXPORT_SYMBOL(device_add_disk);
+
+void device_add_disk_no_queue_reg(struct device *parent, struct gendisk *disk)
+{
+	__device_add_disk(parent, disk, false);
+}
+EXPORT_SYMBOL(device_add_disk_no_queue_reg);
 
 void del_gendisk(struct gendisk *disk)
 {
