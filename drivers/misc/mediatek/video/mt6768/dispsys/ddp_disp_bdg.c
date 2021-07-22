@@ -861,7 +861,7 @@ int bdg_mipi_tx_dphy_clk_setting(enum DISP_BDG_ENUM module,
 				 void *cmdq,
 				 struct LCM_DSI_PARAMS *dsi_params)
 {
-	int i = 0;
+	unsigned int i = 0;
 	unsigned int j = 0;
 	unsigned int data_Rate;
 //	unsigned int pll_clock;
@@ -1168,7 +1168,7 @@ int bdg_mipi_tx_dphy_clk_setting(enum DISP_BDG_ENUM module,
 int bdg_tx_phy_config(enum DISP_BDG_ENUM module,
 			void *cmdq, unsigned int tx_data_rate)
 {
-	int i;
+	unsigned int i;
 	u32 ui, cycle_time;
 	unsigned int hs_trail;
 //	unsigned char timcon_temp;
@@ -1395,7 +1395,7 @@ int bdg_tx_phy_config(enum DISP_BDG_ENUM module,
 int bdg_tx_txrx_ctrl(enum DISP_BDG_ENUM module,
 			void *cmdq, struct LCM_DSI_PARAMS *tx_params)
 {
-	int i;
+	unsigned int i;
 	int lane_num = tx_params->LANE_NUM;
 	bool hstx_cklp_en = tx_params->cont_clock ? FALSE : TRUE;
 	bool dis_eotp_en = tx_params->IsCphy ? TRUE : FALSE;
@@ -1441,7 +1441,7 @@ int bdg_tx_txrx_ctrl(enum DISP_BDG_ENUM module,
 int bdg_tx_ps_ctrl(enum DISP_BDG_ENUM module,
 			void *cmdq, struct LCM_DSI_PARAMS *tx_params)
 {
-	int i;
+	unsigned int i;
 	unsigned int ps_wc, width, bpp, ps_sel;
 
 	DISPFUNCSTART();
@@ -1509,7 +1509,7 @@ int bdg_tx_vdo_timing_set(enum DISP_BDG_ENUM module,
 			void *cmdq, struct LCM_DSI_PARAMS *tx_params)
 {
 /* Huaqin modify for HQ-179522 by jiangyue at 2022/01/24 start */
-	int i,j;
+	unsigned int i,j;
 /* Huaqin modify for HQ-179522 by jiangyue at 2022/01/24 end */
 /* Huaqin modify for HQ-146521 by caogaojie at 2021/08/02 start */
 	u32 dsi_buf_bpp = 0, data_init_byte = 0;
@@ -1623,7 +1623,7 @@ int bdg_tx_vdo_timing_set(enum DISP_BDG_ENUM module,
 int bdg_tx_buf_rw_set(enum DISP_BDG_ENUM module,
 			void *cmdq, struct LCM_DSI_PARAMS *tx_params)
 {
-	int i;
+	unsigned int i;
 	unsigned int width, height, rw_times, tmp;
 
 	DISPFUNCSTART();
@@ -1672,7 +1672,7 @@ int bdg_tx_buf_rw_set(enum DISP_BDG_ENUM module,
 int bdg_tx_enable_hs_clk(enum DISP_BDG_ENUM module,
 				void *cmdq, bool enable)
 {
-	int i;
+	unsigned int i;
 
 	DISPFUNCSTART();
 
@@ -1725,7 +1725,7 @@ int dsi_set_fps(lcm_dsi_params *dsi_params, enum dsi_fps_enum fps)
 int bdg_tx_set_mode(enum DISP_BDG_ENUM module,
 				void *cmdq, unsigned int mode)
 {
-	int i = 0;
+	unsigned int i = 0;
 
 	DISPINFO("%s, mode=%d\n", __func__, mode);
 	for (i = DSI_MODULE_BEGIN(module); i <= DSI_MODULE_END(module); i++) {
@@ -1747,7 +1747,7 @@ int bdg_tx_bist_pattern(enum DISP_BDG_ENUM module,
 				unsigned int red, unsigned int green,
 				unsigned int blue)
 {
-	int i;
+	unsigned int i;
 
 	DISPFUNCSTART();
 
@@ -1781,7 +1781,7 @@ int bdg_tx_bist_pattern(enum DISP_BDG_ENUM module,
 
 int bdg_tx_start(enum DISP_BDG_ENUM module, void *cmdq)
 {
-	int i;
+	unsigned int i;
 
 	DISPFUNCSTART();
 
@@ -1800,7 +1800,7 @@ int bdg_tx_start(enum DISP_BDG_ENUM module, void *cmdq)
 
 int bdg_tx_clr_sta(enum DISP_BDG_ENUM module, void *cmdq)
 {
-	int i;
+	unsigned int i;
 
 	DISPFUNCSTART();
 
@@ -1831,7 +1831,7 @@ int bdg_set_dcs_read_cmd(bool enable, void *cmdq)
 
 int bdg_tx_stop(enum DISP_BDG_ENUM module, void *cmdq)
 {
-	int i;
+	unsigned int i;
 
 	DISPFUNCSTART();
 
@@ -1844,7 +1844,7 @@ int bdg_tx_stop(enum DISP_BDG_ENUM module, void *cmdq)
 
 int bdg_tx_reset(enum DISP_BDG_ENUM module, void *cmdq)
 {
-	int i;
+	unsigned int i;
 
 	DISPFUNCSTART();
 
@@ -1861,7 +1861,7 @@ int bdg_tx_reset(enum DISP_BDG_ENUM module, void *cmdq)
 int bdg_vm_mode_set(enum DISP_BDG_ENUM module, bool enable,
 			unsigned int long_pkt, void *cmdq)
 {
-	int i;
+	unsigned int i;
 
 	for (i = DSI_MODULE_BEGIN(module); i <= DSI_MODULE_END(module); i++) {
 		if (enable) {
@@ -1882,7 +1882,7 @@ int bdg_vm_mode_set(enum DISP_BDG_ENUM module, bool enable,
 
 int bdg_tx_cmd_mode(enum DISP_BDG_ENUM module, void *cmdq)
 {
-	int i;
+	unsigned int i;
 
 	DISPFUNCSTART();
 
@@ -2025,7 +2025,7 @@ int bdg_dsi_dump_reg(enum DISP_BDG_ENUM module, unsigned int level)
 
 int bdg_tx_wait_for_idle(enum DISP_BDG_ENUM module)
 {
-	int i;
+	unsigned int i;
 	unsigned int timeout = 5000; /* unit: usec */
 	unsigned int status;
 
@@ -2444,7 +2444,7 @@ int bdg_tx_init(enum DISP_BDG_ENUM module,
 
 int bdg_tx_deinit(enum DISP_BDG_ENUM module, void *cmdq)
 {
-	int i;
+	unsigned int i;
 
 	DISPFUNCSTART();
 

@@ -2251,6 +2251,7 @@ void DSI_PHY_TIMCONFIG(enum DISP_MODULE_ENUM module,
 		if (timcon2.CLK_TRAIL < 2)
 			timcon2.CLK_TRAIL = 2;
 /*K19A K19A-138 solve mipi timing  by feiwen at 2021/5/19 end*/
+		timcon2.CONT_DET = 0;
 
 		/* clk_exit > 100ns (spec) */
 		/* clk_exit = 200ns */
