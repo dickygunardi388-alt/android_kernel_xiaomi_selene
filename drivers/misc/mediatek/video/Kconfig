@@ -114,6 +114,13 @@ config MTK_AAL_SUPPORT
 	  This feature requires the cowork of AAL user-space algorithm process.
 	  Please also turn on MTK_AAL_SUPPORT in ProjectConfig.mk.
 
+config MTK_DISP_IDLE_MGR_DISABLE
+	bool "disable medietak display idle mgr"
+        default n
+        help
+          define CONFIG_MTK_DISP_IDLE_MGR_DISABLE
+          to disable mtk display idle mgr.
+
 config MTK_OD_SUPPORT
 	bool "support od"
 	default n
