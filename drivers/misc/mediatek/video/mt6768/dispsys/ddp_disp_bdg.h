@@ -24,7 +24,6 @@
 #define HW_NUM			(2)
 /* Huaqin modify for HQ-145957 by liunianliang at 2021/07/12 end */
 #define RX_V12			(1720)
-#define _90HZ_
 #define _n36672c_
 #define _Disable_HS_DCO_
 #define _Disable_LP_TX_L023_
