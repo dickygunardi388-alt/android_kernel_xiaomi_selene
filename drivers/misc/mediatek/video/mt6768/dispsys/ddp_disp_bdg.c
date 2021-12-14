@@ -5745,7 +5745,7 @@ void output_debug_signal(void)
 	//GPIO Mode
 	mtk_spi_write(0x00007300, 0x77701111);
 #endif
-	mtk_spi_write(0x00007310, 0x11111111);
+	mtk_spi_write(0x00007310, 0x31111111);
 
 }
 void bdg_first_init(void)
@@ -5795,9 +5795,9 @@ int bdg_common_init(enum DISP_BDG_ENUM module,
 
 	DISPFUNCSTART();
  	clk_buf_disp_ctrl(true);
-	mdelay(1);
+	mdelay(2);
 	bdg_tx_pull_6382_reset_pin();
-	mdelay(3);
+	mdelay(4);
 	spislv_init();
 	spislv_switch_speed_hz(SPI_TX_LOW_SPEED_HZ, SPI_RX_LOW_SPEED_HZ);
 
