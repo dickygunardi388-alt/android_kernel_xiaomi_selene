@@ -391,7 +391,7 @@ static int mt6360_psy_online_changed(struct mt6360_pmu_chg_info *mpci)
 	if (ret < 0)
 		dev_err(mpci->dev, "%s: psy online fail(%d)\n", __func__, ret);
 	else
-		dev_info(mpci->dev,
+		dev_dbg(mpci->dev,
 			 "%s: pwr_rdy = %d\n",  __func__, mpci->attach);
 #endif
 	return ret;
@@ -420,7 +420,7 @@ static int mt6360_psy_chg_type_changed(struct mt6360_pmu_chg_info *mpci)
 		dev_err(mpci->dev,
 			"%s: psy type failed, ret = %d\n", __func__, ret);
 	else
-		dev_info(mpci->dev,
+		dev_dbg(mpci->dev,
 			 "%s: chg_type = %d\n", __func__, mpci->chg_type);
 #endif
 	return ret;
@@ -429,7 +429,7 @@ static int mt6360_psy_chg_type_changed(struct mt6360_pmu_chg_info *mpci)
 
 static int mt6360_set_usbsw_state(struct mt6360_pmu_chg_info *mpci, int state)
 {
-	dev_info(mpci->dev, "%s: state = %d\n", __func__, state);
+	dev_dbg(mpci->dev, "%s: state = %d\n", __func__, state);
 
 	/* Switch D+D- to AP/MT6360 */
 	if (state == MT6360_USBSW_CHG)
@@ -444,7 +444,7 @@ static int mt6360_set_usbsw_state(struct mt6360_pmu_chg_info *mpci, int state)
 static int __maybe_unused mt6360_enable_dcd_tout(
 				      struct mt6360_pmu_chg_info *mpci, bool en)
 {
-	dev_info(mpci->dev, "%s en = %d\n", __func__, en);
+	dev_dbg(mpci->dev, "%s en = %d\n", __func__, en);
 	return (en ? mt6360_pmu_reg_set_bits : mt6360_pmu_reg_clr_bits)
 		(mpci->mpi, MT6360_PMU_DEVICE_TYPE, MT6360_MASK_DCDTOUTEN);
 }
@@ -477,7 +477,7 @@ static int __mt6360_enable_usbchgen(struct mt6360_pmu_chg_info *mpci, bool en)
 	bool dcd_en = false;
 #endif /* CONFIG_MT6360_DCDTOUT_SUPPORT */
 
-	dev_info(mpci->dev, "%s: en = %d\n", __func__, en);
+	dev_dbg(mpci->dev, "%s: en = %d\n", __func__, en);
 	if (en) {
 #ifndef CONFIG_MT6360_DCDTOUT_SUPPORT
 		ret = mt6360_is_dcd_tout_enable(mpci, &dcd_en);
@@ -488,7 +488,7 @@ static int __mt6360_enable_usbchgen(struct mt6360_pmu_chg_info *mpci, bool en)
 		for (i = 0; i < max_wait_cnt; i++) {
 			if (is_usb_rdy())
 				break;
-			dev_info(mpci->dev, "%s: CDP block\n", __func__);
+			dev_dbg(mpci->dev, "%s: CDP block\n", __func__);
 #ifndef CONFIG_TCPC_CLASS
 			/* Check vbus */
 			ret = mt6360_get_chrdet_ext_stat(mpci, &pwr_rdy);
@@ -497,15 +497,15 @@ static int __mt6360_enable_usbchgen(struct mt6360_pmu_chg_info *mpci, bool en)
 					 __func__, ret);
 				return ret;
 			}
-			dev_info(mpci->dev, "%s: pwr_rdy = %d\n", __func__,
+			dev_dbg(mpci->dev, "%s: pwr_rdy = %d\n", __func__,
 				 pwr_rdy);
 			if (!pwr_rdy) {
-				dev_info(mpci->dev, "%s: plug out\n", __func__);
+				dev_dbg(mpci->dev, "%s: plug out\n", __func__);
 				return ret;
 			}
 #else
 			if (!(mpci->tcpc_attach)) {
-				dev_info(mpci->dev,
+				dev_dbg(mpci->dev,
 					 "%s: plug out\n", __func__);
 				return 0;
 			}
@@ -515,7 +515,7 @@ static int __mt6360_enable_usbchgen(struct mt6360_pmu_chg_info *mpci, bool en)
 		if (i == max_wait_cnt)
 			dev_err(mpci->dev, "%s: CDP timeout\n", __func__);
 		else
-			dev_info(mpci->dev, "%s: CDP free\n", __func__);
+			dev_dbg(mpci->dev, "%s: CDP free\n", __func__);
 	}
 	mt6360_set_usbsw_state(mpci, usbsw);
 	ret = mt6360_pmu_reg_update_bits(mpci->mpi, MT6360_PMU_DEVICE_TYPE,
@@ -573,13 +573,13 @@ static int mt6360_chgdet_post_process(struct mt6360_pmu_chg_info *mpci)
 	attach = mpci->pwr_rdy;
 #endif /* CONFIG_TCPC_CLASS */
 	if (mpci->attach == attach) {
-		dev_info(mpci->dev, "%s: attach(%d) is the same\n",
+		dev_dbg(mpci->dev, "%s: attach(%d) is the same\n",
 				    __func__, attach);
 		inform_psy = !attach;
 		goto out;
 	}
 	mpci->attach = attach;
-	dev_info(mpci->dev, "%s: attach = %d\n", __func__, attach);
+	dev_dbg(mpci->dev, "%s: attach = %d\n", __func__, attach);
 	/* Plug out during BC12 */
 	if (!attach) {
 		mpci->chg_type = CHARGER_UNKNOWN;
@@ -592,7 +592,7 @@ static int mt6360_chgdet_post_process(struct mt6360_pmu_chg_info *mpci)
 	usb_status = (ret & MT6360_MASK_USB_STATUS) >> MT6360_SHFT_USB_STATUS;
 	switch (usb_status) {
 	case MT6360_CHG_TYPE_UNDER_GOING:
-		dev_info(mpci->dev, "%s: under going...\n", __func__);
+		dev_dbg(mpci->dev, "%s: under going...\n", __func__);
 		return ret;
 	case MT6360_CHG_TYPE_SDP:
 		mpci->chg_type = STANDARD_HOST;
@@ -659,7 +659,7 @@ static inline int mt6360_read_zcv(struct mt6360_pmu_chg_info *mpci)
 		return ret;
 	}
 	mpci->zcv = 1250 * (zcv_data[0] * 256 + zcv_data[1]);
-	dev_info(mpci->dev, "%s: zcv = (0x%02X, 0x%02X, %dmV)\n",
+	dev_dbg(mpci->dev, "%s: zcv = (0x%02X, 0x%02X, %dmV)\n",
 		 __func__, zcv_data[0], zcv_data[1], mpci->zcv/1000);
 	/* Disable ZCV */
 	ret = mt6360_pmu_reg_clr_bits(mpci->mpi, MT6360_PMU_ADC_CONFIG,
@@ -757,7 +757,7 @@ static int mt6360_enable(struct charger_device *chg_dev, bool en)
 	/* Workaround for vsys overshoot */
 	mutex_lock(&mpci->ichg_lock);
 	if (mpci->ichg < 500000) {
-		dev_info(mpci->dev,
+		dev_dbg(mpci->dev,
 			 "%s: ichg < 500mA, bypass vsys wkard\n", __func__);
 		goto out;
 	}
@@ -989,7 +989,7 @@ static int mt6360_enable_te(struct charger_device *chg_dev, bool en)
 	struct mt6360_pmu_chg_info *mpci = charger_get_data(chg_dev);
 	struct mt6360_chg_platform_data *pdata = dev_get_platdata(mpci->dev);
 
-	dev_info(mpci->dev, "%s: en = %d\n", __func__, en);
+	dev_dbg(mpci->dev, "%s: en = %d\n", __func__, en);
 	if (!pdata->en_te)
 		return 0;
 	return mt6360_pmu_reg_update_bits(mpci->mpi, MT6360_PMU_CHG_CTRL2,
@@ -1002,7 +1002,7 @@ static int mt6360_enable_pump_express(struct mt6360_pmu_chg_info *mpci,
 	long timeout, pe_timeout = pe20 ? 1400 : 2800;
 	int ret = 0;
 
-	dev_info(mpci->dev, "%s\n", __func__);
+	dev_dbg(mpci->dev, "%s\n", __func__);
 	ret = mt6360_set_aicr(mpci->chg_dev, 800000);
 	if (ret < 0)
 		return ret;
@@ -1150,7 +1150,7 @@ static int mt6360_enable_cable_drop_comp(struct charger_device *chg_dev,
 	struct mt6360_pmu_chg_info *mpci = charger_get_data(chg_dev);
 	int ret = 0;
 
-	dev_info(mpci->dev, "%s: en = %d\n", __func__, en);
+	dev_dbg(mpci->dev, "%s: en = %d\n", __func__, en);
 	if (en)
 		return ret;
 
@@ -1245,7 +1245,7 @@ static int mt6360_run_aicc(struct charger_device *chg_dev, u32 *uA)
 	/* Auto run aicc */
 	if (!pdata->aicc_once) {
 		if (!try_wait_for_completion(&mpci->aicc_done)) {
-			dev_info(mpci->dev, "%s: aicc is not act\n", __func__);
+			dev_dbg(mpci->dev, "%s: aicc is not act\n", __func__);
 			return 0;
 		}
 
@@ -1293,7 +1293,7 @@ static int mt6360_run_aicc(struct charger_device *chg_dev, u32 *uA)
 	if (!pdata->post_aicc)
 		goto skip_post_aicc;
 
-	dev_info(mpci->dev, "%s: aicc pre val = %d\n", __func__, aicc_val);
+	dev_dbg(mpci->dev, "%s: aicc pre val = %d\n", __func__, aicc_val);
 	ret = mt6360_get_aicr(chg_dev, &aicr_val);
 	if (ret < 0) {
 		dev_err(mpci->dev, "%s: get aicr fail\n", __func__);
@@ -1318,7 +1318,7 @@ static int mt6360_run_aicc(struct charger_device *chg_dev, u32 *uA)
 		dev_err(mpci->dev, "%s: set aicr fail\n", __func__);
 		goto out;
 	}
-	dev_info(mpci->dev, "%s: aicc post val = %d\n", __func__, aicc_val);
+	dev_dbg(mpci->dev, "%s: aicc post val = %d\n", __func__, aicc_val);
 skip_post_aicc:
 	*uA = aicc_val;
 out:
@@ -1380,7 +1380,7 @@ static int mt6360_enable_hz(struct charger_device *chg_dev, bool en)
 	struct mt6360_pmu_chg_info *mpci = charger_get_data(chg_dev);
 	int ret = 0;
 
-	dev_info(mpci->dev, "%s: en = %d\n", __func__, en);
+	dev_dbg(mpci->dev, "%s: en = %d\n", __func__, en);
 
 	ret = (en ? mt6360_pmu_reg_set_bits : mt6360_pmu_reg_clr_bits)
 		(mpci->mpi, MT6360_PMU_CHG_CTRL1, MT6360_MASK_HZ_EN);
@@ -1482,10 +1482,10 @@ static int mt6360_enable_chg_type_det(struct charger_device *chg_dev, bool en)
 #if defined(CONFIG_MT6360_PMU_CHARGER_TYPE_DETECT) && defined(CONFIG_TCPC_CLASS)
 	struct mt6360_pmu_chg_info *mpci = charger_get_data(chg_dev);
 
-	dev_info(mpci->dev, "%s\n", __func__);
+	dev_dbg(mpci->dev, "%s\n", __func__);
 	mutex_lock(&mpci->chgdet_lock);
 	if (mpci->tcpc_attach == en) {
-		dev_info(mpci->dev, "%s attach(%d) is the same\n",
+		dev_dbg(mpci->dev, "%s attach(%d) is the same\n",
 			 __func__, mpci->tcpc_attach);
 		goto out;
 	}
@@ -1535,7 +1535,7 @@ static int mt6360_get_adc(struct charger_device *chg_dev, enum adc_channel chan,
 	}
 	ret = iio_read_channel_processed(mpci->channels[channel], min);
 	if (ret < 0) {
-		dev_info(mpci->dev, "%s: fail(%d)\n", __func__, ret);
+		dev_dbg(mpci->dev, "%s: fail(%d)\n", __func__, ret);
 		return ret;
 	}
 	*max = *min;
@@ -1590,7 +1590,7 @@ static int mt6360_get_tchg(struct charger_device *chg_dev,
 		mpci->tchg = temp_jc;
 	mutex_unlock(&mpci->tchg_lock);
 	*tchg_min = *tchg_max = temp_jc;
-	dev_info(mpci->dev, "%s: tchg = %d\n", __func__, temp_jc);
+	dev_dbg(mpci->dev, "%s: tchg = %d\n", __func__, temp_jc);
 	return 0;
 }
 
@@ -1620,7 +1620,7 @@ static int mt6360_safety_check(struct charger_device *chg_dev, u32 polling_ieoc)
 		eoc_cnt = 0;
 	/* If ibat is less than polling_ieoc for 3 times, trigger EOC event */
 	if (eoc_cnt == 3) {
-		dev_info(mpci->dev, "%s: polling_ieoc = %d, ibat = %d\n",
+		dev_dbg(mpci->dev, "%s: polling_ieoc = %d, ibat = %d\n",
 			 __func__, polling_ieoc, ibat);
 		charger_dev_notify(mpci->chg_dev, CHARGER_DEV_NOTIFY_EOC);
 		eoc_cnt = 0;
@@ -1676,7 +1676,7 @@ static int mt6360_get_zcv(struct charger_device *chg_dev, u32 *uV)
 {
 	struct mt6360_pmu_chg_info *mpci = charger_get_data(chg_dev);
 
-	dev_info(mpci->dev, "%s: zcv = %dmV\n", __func__, mpci->zcv / 1000);
+	dev_dbg(mpci->dev, "%s: zcv = %dmV\n", __func__, mpci->zcv / 1000);
 	*uV = mpci->zcv;
 	return 0;
 }
@@ -1996,7 +1996,7 @@ static irqreturn_t mt6360_pmu_pwr_rdy_evt_handler(int irq, void *data)
 	if (ret < 0)
 		return ret;
 	pwr_rdy = (ret & MT6360_MASK_PWR_RDY_EVT);
-	dev_info(mpci->dev, "%s: pwr_rdy = %d\n", __func__, pwr_rdy);
+	dev_dbg(mpci->dev, "%s: pwr_rdy = %d\n", __func__, pwr_rdy);
 #endif
 	return IRQ_HANDLED;
 }
@@ -2046,7 +2046,7 @@ static irqreturn_t mt6360_pmu_chg_vbusov_evt_handler(int irq, void *data)
 		goto out;
 	vbusov_stat = (ret & BIT(7));
 	noti->vbusov_stat = vbusov_stat;
-	dev_info(mpci->dev, "%s: stat = %d\n", __func__, vbusov_stat);
+	dev_dbg(mpci->dev, "%s: stat = %d\n", __func__, vbusov_stat);
 out:
 	return IRQ_HANDLED;
 }
@@ -2055,7 +2055,7 @@ static irqreturn_t mt6360_pmu_wd_pmu_det_handler(int irq, void *data)
 {
 	struct mt6360_pmu_chg_info *mpci = data;
 
-	dev_info(mpci->dev, "%s\n", __func__);
+	dev_dbg(mpci->dev, "%s\n", __func__);
 	return IRQ_HANDLED;
 }
 
@@ -2063,7 +2063,7 @@ static irqreturn_t mt6360_pmu_wd_pmu_done_handler(int irq, void *data)
 {
 	struct mt6360_pmu_chg_info *mpci = data;
 
-	dev_info(mpci->dev, "%s\n", __func__);
+	dev_dbg(mpci->dev, "%s\n", __func__);
 	return IRQ_HANDLED;
 }
 
@@ -2076,7 +2076,7 @@ static irqreturn_t mt6360_pmu_chg_tmri_handler(int irq, void *data)
 	ret = mt6360_pmu_reg_read(mpci->mpi, MT6360_PMU_CHG_STAT4);
 	if (ret < 0)
 		return IRQ_HANDLED;
-	dev_info(mpci->dev, "%s: chg_stat4 = 0x%02x\n", __func__, ret);
+	dev_dbg(mpci->dev, "%s: chg_stat4 = 0x%02x\n", __func__, ret);
 	if (!(ret & MT6360_MASK_CHG_TMRI))
 		return IRQ_HANDLED;
 	charger_dev_notify(mpci->chg_dev, CHARGER_DEV_NOTIFY_SAFETY_TIMEOUT);
@@ -2185,7 +2185,7 @@ static irqreturn_t mt6360_pmu_pumpx_donei_handler(int irq, void *data)
 {
 	struct mt6360_pmu_chg_info *mpci = data;
 
-	dev_info(mpci->dev, "%s\n", __func__);
+	dev_dbg(mpci->dev, "%s\n", __func__);
 	atomic_set(&mpci->pe_complete, 0);
 	complete(&mpci->pumpx_done);
 	return IRQ_HANDLED;
@@ -2273,7 +2273,7 @@ static irqreturn_t mt6360_pmu_chrdet_ext_evt_handler(int irq, void *data)
 	bool pwr_rdy = false;
 
 	ret = mt6360_get_chrdet_ext_stat(mpci, &pwr_rdy);
-	dev_info(mpci->dev, "%s: pwr_rdy = %d\n", __func__, pwr_rdy);
+	dev_dbg(mpci->dev, "%s: pwr_rdy = %d\n", __func__, pwr_rdy);
 	if (ret < 0)
 		goto out;
 	if (mpci->pwr_rdy == pwr_rdy)
@@ -2289,7 +2289,7 @@ static irqreturn_t mt6360_pmu_chrdet_ext_evt_handler(int irq, void *data)
 #endif /* CONFIG_MT6360_PMU_CHARGER_TYPE_DETECT */
 	if (atomic_read(&mpci->pe_complete) && pwr_rdy == true &&
 	    mpci->mpi->chip_rev <= 0x02) {
-		dev_info(mpci->dev, "%s: re-trigger pe20 pattern\n", __func__);
+		dev_dbg(mpci->dev, "%s: re-trigger pe20 pattern\n", __func__);
 		queue_work(mpci->pe_wq, &mpci->pe_work);
 	}
 out:
@@ -2425,7 +2425,7 @@ static int mt6360_chg_mivr_task_threadfn(void *data)
 	u32 ibus;
 	int ret;
 
-	dev_info(mpci->dev, "%s ++\n", __func__);
+	dev_dbg(mpci->dev, "%s ++\n", __func__);
 	while (!kthread_should_stop()) {
 		wait_event(mpci->waitq, atomic_read(&mpci->mivr_cnt) > 0);
 		mt_dbg(mpci->dev, "%s: enter mivr thread\n", __func__);
@@ -2458,7 +2458,7 @@ loop_cont:
 		mt6360_pmu_chg_irq_enable("chg_mivr_evt", 1);
 		msleep(200);
 	}
-	dev_info(mpci->dev, "%s --\n", __func__);
+	dev_dbg(mpci->dev, "%s --\n", __func__);
 	return 0;
 }
 
@@ -2594,7 +2594,7 @@ static int mt6360_chg_init_setting(struct mt6360_pmu_chg_info *mpci)
 	int ret = 0;
 	u32 boot_mode = get_boot_mode();
 
-	dev_info(mpci->dev, "%s\n", __func__);
+	dev_dbg(mpci->dev, "%s\n", __func__);
 
 	ret = mt6360_pmu_reg_read(mpci->mpi, MT6360_PMU_CHRDET_STAT);
 	if (ret >= 0)
@@ -2619,7 +2619,7 @@ static int mt6360_chg_init_setting(struct mt6360_pmu_chg_info *mpci)
 						 MT6360_PMU_CHG_CTRL3,
 						 MT6360_MASK_AICR,
 						 0x02 << MT6360_SHFT_AICR);
-		dev_info(mpci->dev, "%s: set aicr to 200mA in meta mode\n",
+		dev_dbg(mpci->dev, "%s: set aicr to 200mA in meta mode\n",
 			__func__);
 	}
 	/* disable wdt reduce 1mA power consumption */
@@ -2702,7 +2702,7 @@ static int mt6360_set_shipping_mode(struct mt6360_pmu_chg_info *mpci)
 	int ret;
 	u8 data = 0;
 
-	dev_info(mpci->dev, "%s\n", __func__);
+	dev_dbg(mpci->dev, "%s\n", __func__);
 	mutex_lock(&mpi->io_lock);
 	/* disable shipping mode rst */
 	ret = i2c_smbus_read_i2c_block_data(mpi->i2c,
@@ -2710,7 +2710,7 @@ static int mt6360_set_shipping_mode(struct mt6360_pmu_chg_info *mpci)
 	if (ret < 0)
 		goto out;
 	data |= MT6360_MASK_SHIP_RST_DIS;
-	dev_info(mpci->dev, "%s: reg[0x06] = 0x%02x\n", __func__, data);
+	dev_dbg(mpci->dev, "%s: reg[0x06] = 0x%02x\n", __func__, data);
 	ret = i2c_smbus_write_i2c_block_data(mpi->i2c,
 					     MT6360_PMU_CORE_CTRL2, 1, &data);
 	if (ret < 0) {
@@ -2767,14 +2767,14 @@ void mt6360_recv_batoc_callback(BATTERY_OC_LEVEL tag)
 					"%s: set shipping mode fail\n",
 					__func__);
 			else
-				dev_info(g_mpci->dev,
+				dev_dbg(g_mpci->dev,
 					 "%s: set shipping mode done\n",
 					 __func__);
 		}
 		mdelay(8);
 		cnt++;
 	}
-	dev_info(g_mpci->dev, "%s exit, cnt = %d, FG_CUR_H = %d\n",
+	dev_dbg(g_mpci->dev, "%s exit, cnt = %d, FG_CUR_H = %d\n",
 		 __func__, cnt,
 		 pmic_get_register_value(PMIC_RG_INT_STATUS_FG_CUR_H));
 }
@@ -2788,7 +2788,7 @@ static int mt6360_pmu_chg_probe(struct platform_device *pdev)
 	int i, ret = 0;
 	char *p;
 
-	dev_info(&pdev->dev, "%s\n", __func__);
+	dev_dbg(&pdev->dev, "%s\n", __func__);
 	if (use_dt) {
 		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
 		if (!pdata)
@@ -2907,7 +2907,7 @@ static int mt6360_pmu_chg_probe(struct platform_device *pdev)
 && !defined(CONFIG_TCPC_CLASS)
 	schedule_work(&mpci->chgdet_work);
 #endif /* CONFIG_MT6360_PMU_CHARGER_TYPE_DETECT && !CONFIG_TCPC_CLASS */
-	dev_info(&pdev->dev, "%s: successfully probed\n", __func__);
+	dev_dbg(&pdev->dev, "%s: successfully probed\n", __func__);
 	return 0;
 err_shipping_mode_attr:
 	device_remove_file(mpci->dev, &dev_attr_shipping_mode);
