@@ -426,18 +426,12 @@ endif
 # common config
 #
 ccflags-y += -DMET_USER_EVENT_SUPPORT -DMTK_GPU_DVFS
-ccflags-y += -DGED_DVFS_DEBUG_BUF
+#ccflags-y += -DGED_DVFS_DEBUG_BUF
 #ccflags-y += -DGED_KPI_DEBUG
-
-VER := eng
 
 VER := user
 ccflags-y += -DGED_LOG_SIZE_LIMITED
 ccflags-y += -DGED_BUFFER_LOG_DISABLE
-
-ifeq ($(VER),eng)
-ccflags-y += -DGED_DEBUG_IOCTL_LOCK
-endif
 
 ifeq ($(CONFIG_MTK_FTRACE_DEFAULT_ENABLE),y)
 ccflags-y += -DENABLE_GED_SYSTRACE_UTIL
