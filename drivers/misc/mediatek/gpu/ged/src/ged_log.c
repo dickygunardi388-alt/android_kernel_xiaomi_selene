@@ -1184,6 +1184,7 @@ EXPORT_SYMBOL(ged_log_trace_counter);
 void ged_log_perf_trace_counter(char *name, long long count, int pid,
 	unsigned long frameID, u64 BQID)
 {
+#if 0
 	if (ged_log_perf_trace_enable) {
 		__mt_update_tracing_mark_write_addr();
 /*
@@ -1198,6 +1199,13 @@ void ged_log_perf_trace_counter(char *name, long long count, int pid,
 		preempt_enable();
 #endif
 	}
+#else
+	(void)name;
+	(void)count;
+	(void)pid;
+	(void)frameID;
+	(void)BQID;
+#endif
 }
 EXPORT_SYMBOL(ged_log_perf_trace_counter);
 
