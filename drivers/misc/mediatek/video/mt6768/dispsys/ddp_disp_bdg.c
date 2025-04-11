@@ -545,7 +545,8 @@ void ana_macro_on(void *cmdq)
 	 * bit 16-17 is display mm clk 1(270m)/2(405m)/3(540m)
 	 * dsc_on:vact * hact * vrefresh * (vtotal / vact) * bubble_ratio
 	 */
-	switch (MM_CLK) {
+	// erabye - K19S-31 append
+	switch (mtk_mm_clk) {
 	case 546:
 		DISPMSG("%s, 6382 mmclk 546M\n", __func__);
 		reg = (3 << 24) | (3 << 16) | (1 << 8) | (1 << 0); //540M
@@ -4519,7 +4520,8 @@ int mipi_dsi_rx_mac_init(enum DISP_BDG_ENUM module,
 	DSI_OUTREG32(cmdq, DSI2_REG->DSI2_DEVICE_DDI_RESP_TO_CNT_OS, 0);
 	DSI_OUTREG32(cmdq, DSI2_REG->DSI2_DEVICE_DDI_VALID_VC_CFG_OS, 0xf);
 	/* 0x1b for MMCLK 270M 0x37 for MMCLK 405M */
-	if (MM_CLK == 270)
+	// erabye - K19S-31 append
+	if (mtk_mm_clk == 270)
 		DSI_OUTREG32(cmdq, DSI2_REG->DSI2_DEVICE_DDI_CLK_MGR_CFG_OS, 0x1b);
 	else
 		DSI_OUTREG32(cmdq, DSI2_REG->DSI2_DEVICE_DDI_CLK_MGR_CFG_OS, 0x37);
