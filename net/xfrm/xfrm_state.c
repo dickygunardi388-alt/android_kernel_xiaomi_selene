@@ -39,11 +39,8 @@
 static char dmsg[128];
 #define format_trace_info()				\
 do {							\
-	int ret;					\
 	memset(dmsg, 0, sizeof(dmsg));			\
-	ret = snprintf(dmsg, sizeof(dmsg) - 1, "%s:%d", __func__, __LINE__);	\
-	if (ret < 0)								\
-		pr_info("[mtk_net][xfrm_state] snprintf return error code :%d\n", ret);	\
+	snprintf(dmsg, sizeof(dmsg) - 1, "%s:%d", __func__, __LINE__);	\
 } while (0)
 
 static void
@@ -941,7 +938,7 @@ static  void xfrm_state_check_del_byspi_hlish(struct xfrm_state *x, char *func_n
 	//check HWT
 	if ((next && (next->next == next)) ||
 	    ((*pprev) && ((*pprev) == pprev)) ||
-	    (x->byspi.next == &x->byspi)) {
+	    (x && (x->byspi.next == &x->byspi))) {
 		pr_info("[mtk_net][xfrm_state] check_del1_byspi %s: WARNING......", func_name);
 		BUG_ON(1);
 	}
