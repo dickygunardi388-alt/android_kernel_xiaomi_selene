@@ -1545,6 +1545,9 @@ static void mtk_dsi_poweroff(struct mtk_dsi *dsi)
 	if (--dsi->clk_refcnt != 0)
 		return;
 
+	/* set the lane number as 0 to pull down mipi */
+	writel(0, dsi->regs + DSI_TXRX_CTRL);
+
 	clk_disable_unprepare(dsi->engine_clk);
 	clk_disable_unprepare(dsi->digital_clk);
 	phy_power_off(dsi->phy);
