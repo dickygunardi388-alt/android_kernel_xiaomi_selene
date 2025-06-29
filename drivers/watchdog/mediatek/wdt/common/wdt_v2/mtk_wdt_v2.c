@@ -48,7 +48,6 @@
 #ifndef __USING_DUMMY_WDT_DRV__
 #include <mt-plat/upmu_common.h>
 #endif
-#include <dbgtop.h>
 
 #ifdef CONFIG_MTK_CPU_KORO
 #include <mtk_koro.h>
@@ -64,16 +63,6 @@ static const struct of_device_id rgu_of_match[] = {
 	{ .compatible = "mediatek,toprgu", },
 	{ .compatible = "mediatek,mt6765-toprgu", },
 	{},
-};
-
-__weak int mtk_dbgtop_dfd_timeout_reset(void)
-{
-	return 0;
-};
-
-__weak int mtk_dbgtop_dram_reserved(int enable)
-{
-	return 0;
 };
 
 __weak void dfd_workaround(void) {};
@@ -694,9 +683,7 @@ void wdt_arch_reset(char mode)
 	 *   4: mrdump key
 	 */
 	if (!(mode & WD_SW_RESET_KEEP_DDR_RESERVE)) {
-		mtk_dbgtop_dfd_timeout_reset();
 		mtk_rgu_dram_reserved(0);
-		mtk_dbgtop_dram_reserved(0);
 	} else {
 		mtk_rgu_pause_dvfsrc(1);
 		dfd_workaround();
