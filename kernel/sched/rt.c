@@ -5,6 +5,7 @@
  */
 
 #include "sched.h"
+#include "features.h"
 
 #include <linux/slab.h>
 #include <linux/irq_work.h>
