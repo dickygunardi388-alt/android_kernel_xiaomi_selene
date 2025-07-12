@@ -61,8 +61,8 @@ static bool smi_sspm_ipi_register;
 #undef pr_fmt
 #define pr_fmt(fmt) "[" DEV_NAME "]" fmt
 
-#define SMIDBG(string, args...) pr_debug(string, ##args)
-#define SMIWRN(cmdq, string, args...) pr_debug(string, ##args)
+#define SMIDBG(string, args...) ((void)0)
+#define SMIWRN(cmdq, string, args...) ((void)0)
 #define SMIERR(string, args...) pr_err(string, ##args)
 
 #ifndef ATOMR_CLK
