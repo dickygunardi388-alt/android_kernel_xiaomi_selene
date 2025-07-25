@@ -4065,7 +4065,7 @@ int polling_status(void)
 
 	if (timeout == 0) {
 		DISPMSG("%s, wait timeout!\n", __func__);
-		bdg_dsi_dump_reg(DISP_BDG_DSI0, 0);
+		//bdg_dsi_dump_reg(DISP_BDG_DSI0, 0);
 		return -1;
 	}
 
