@@ -524,6 +524,7 @@ void ana_macro_on(void *cmdq)
 	unsigned int reg = 0;
 
 	DISPFUNCSTART();
+	mtk_panel_compare();
 	//select pll power on `MAINPLL_CON3
 	DSI_OUTREG32(cmdq, APMIXEDSYS->MAINPLL_CON3, 3);
 	udelay(1);
