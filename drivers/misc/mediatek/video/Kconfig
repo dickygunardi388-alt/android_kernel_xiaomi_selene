@@ -121,16 +121,6 @@ config MTK_DISP_IDLE_MGR_DISABLE
           define CONFIG_MTK_DISP_IDLE_MGR_DISABLE
           to disable mtk display idle mgr.
 
-config MTK_OD_SUPPORT
-	bool "support od"
-	default n
-	help
-	  Over drive LCD to enhance the response time.
-	  On high frame rate (e.g. 120Hz) platform, the LCD response time is
-	  not short enough to display clear moving objects.
-	  This feature allows to speed up the change time of each pixels.
-	  MUST fill the over-drive table correctly according to LCD property.
-
 config SINGLE_PANEL_OUTPUT
 	bool "support single panel output"
 	default n
@@ -139,24 +129,6 @@ config SINGLE_PANEL_OUTPUT
 	  Panel and tv can't not display at the same time.
 	  When hdmi plug in, only show display in tv, panle will be black screen.
 	  And when hdmi plug out, panel will resume.
-
-config MTK_OVERLAY_ENGINE_SUPPORT
-	bool "support overlay time division multiplex"
-	default n
-	help
-	  This enable support overlay time division multiplex.
-	  This enable means support overlay engine.
-	  If you want display support Overlay time division mulptiplex, set Y in xxx_defconfig.mk.
-	  If unsure, set N.
-
-config MTK_CONSUMER_PARTIAL_UPDATE_SUPPORT
-	bool "support partial update"
-	default n
-	help
-	  This enable support display partial support.
-	  Define it means display driver support partial update.
-	  If you want to support partial update, please set Y in xxx_defconfig.mk.
-	  If unsure, set N.
 
 config MTK_PQ_COLOR_MODE
 	string "Config PQ_COLOR_MODE (MDP & DISP COLOR on/off)"
