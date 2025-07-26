@@ -1900,6 +1900,7 @@ int bdg_mutex_trigger(enum DISP_BDG_ENUM module, void *cmdq)
 
 int bdg_dsi_dump_reg(enum DISP_BDG_ENUM module, unsigned int level)
 {
+#if 0
 	unsigned int i, k, tmp;
 
 //	DISPFUNCSTART();
@@ -2008,6 +2009,7 @@ int bdg_dsi_dump_reg(enum DISP_BDG_ENUM module, unsigned int level)
 		}
 	}
 
+#endif
 	return 0;
 }
 
