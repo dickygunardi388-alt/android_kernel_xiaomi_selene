@@ -68,10 +68,6 @@ static void ged_sync_cb(struct dma_fence *sFence, struct dma_fence_cb *waiter)
 	psMonitor = GED_CONTAINER_OF(waiter,
 		struct GED_MONITOR_3D_FENCE, sSyncWaiter);
 
-	ged_log_buf_print(ghLogBuf_DVFS,
-		"[-] ged_monitor_3D_fence_done (ts=%llu) %p",
-		t, psMonitor->psSyncFence);
-
 	schedule_work(&psMonitor->sWork);
 }
 
@@ -151,10 +147,6 @@ GED_ERROR ged_monitor_3D_fence_add(int fence_fd)
 
 	err = dma_fence_add_callback(psMonitor->psSyncFence,
 		&psMonitor->sSyncWaiter, ged_sync_cb);
-
-	ged_log_buf_print(ghLogBuf_DVFS,
-		"[+] %s (ts=%llu) %p", __func__, t, psDebugAddress);
-
 
 #ifdef GED_DEBUG_MONITOR_3D_FENCE
 	ged_log_buf_print(ghLogBuf_GED,

@@ -635,12 +635,7 @@ bool ged_dvfs_gpu_freq_commit(unsigned long ui32NewFreqID,
 			 * in previous execution period
 			 * Does this fatal for precision?
 			 */
-			ged_log_buf_print2(ghLogBuf_DVFS, GED_LOG_ATTR_TIME,
-		"[GED_K] new freq ID committed: idx=%lu type=%u, g_type=%u",
-				ui32NewFreqID, eCommitType, g_CommitType);
 			if (bCommited == true) {
-				ged_log_buf_print(ghLogBuf_DVFS,
-					"[GED_K] committed true");
 				g_ui32PreFreqID = ui32CurFreqID;
 				g_ui32CurFreqID = ui32NewFreqID;
 				if (g_aOppStat)
@@ -821,17 +816,6 @@ GED_ERROR ged_dvfs_um_commit(unsigned long gpu_tar_freq, bool bFallback)
 		100 * gL_ulWorkingPeriod_us) /
 		(gL_ulCalResetTS_us - g_ulPreDVFS_TS_us);
 		if (sentinalLoading > 100) {
-			ged_log_buf_print(ghLogBuf_DVFS,
-			"[GED_K] g_ulCalResetTS_us: %lu g_ulPreDVFS_TS_us: %lu",
-				gL_ulCalResetTS_us, g_ulPreDVFS_TS_us);
-			ged_log_buf_print(ghLogBuf_DVFS,
-			"[GED_K] gpu_loading: %u g_ulPreCalResetTS_us:%lu",
-				gpu_loading, gL_ulPreCalResetTS_us);
-			ged_log_buf_print(ghLogBuf_DVFS,
-			"[GED_K] g_ulWorkingPeriod_us: %lu",
-				gL_ulWorkingPeriod_us);
-			ged_log_buf_print(ghLogBuf_DVFS,
-				"[GED_K] gpu_av_loading: WTF");
 
 			if (gL_ulWorkingPeriod_us == 0)
 				sentinalLoading = gpu_loading;
@@ -840,8 +824,6 @@ GED_ERROR ged_dvfs_um_commit(unsigned long gpu_tar_freq, bool bFallback)
 		}
 		gpu_loading = sentinalLoading;
 	} else {
-		ged_log_buf_print(ghLogBuf_DVFS,
-			"[GED_K] gpu_av_loading: 5566/ %u", gpu_loading);
 		gpu_loading = 0;
 	}
 
@@ -894,8 +876,6 @@ GED_ERROR ged_dvfs_um_commit(unsigned long gpu_tar_freq, bool bFallback)
 		}
 	}
 
-	ged_log_buf_print(ghLogBuf_DVFS,
-		"[GED_K] rdy to commit (%u)", ui32NewFreqID);
 
 	g_computed_freq_id = ui32NewFreqID;
 	if (bFallback == true)
@@ -994,9 +974,6 @@ static int ged_dvfs_fb_gpu_dvfs(int t_gpu, int t_gpu_target,
 #endif
 
 	if (gpu_dvfs_enable == 0) {
-		ged_log_buf_print(ghLogBuf_DVFS,
-			"[GED_K][FB_DVFS] skip %s due to gpu_dvfs_enable=%u",
-			__func__, gpu_dvfs_enable);
 		gpu_freq_pre = ret_freq = mt_gpufreq_get_cur_freq();
 		goto FB_RET;
 	}
@@ -1044,9 +1021,6 @@ static int ged_dvfs_fb_gpu_dvfs(int t_gpu, int t_gpu_target,
 	spin_unlock_irqrestore(&gsGpuUtilLock, ui32IRQFlags);
 
 	if (t_gpu <= 0) {
-		ged_log_buf_print(ghLogBuf_DVFS,
-		"[GED_K][FB_DVFS] skip DVFS due to t_gpu <= 0, t_gpu: %d"
-			, t_gpu);
 		gpu_freq_pre = ret_freq = mt_gpufreq_get_cur_freq();
 		goto FB_RET;
 	}
@@ -1179,21 +1153,6 @@ static int ged_dvfs_fb_gpu_dvfs(int t_gpu, int t_gpu_target,
 #endif
 
 	gpu_freq_pre = gpu_freq_pre << 10;
-#ifdef GED_ENABLE_DYNAMIC_DVFS_MARGIN
-	ged_log_buf_print(ghLogBuf_DVFS,
-"[GED_K][FB_DVFS]t_gpu:%d,t_gpu_tar:%d,gpu_freq_tar:%d,gpu_freq_pre:%d",
-	t_gpu, t_gpu_target, gpu_freq_tar, gpu_freq_pre);
-
-	ged_log_buf_print(ghLogBuf_DVFS,
-"[GED_K][FB_DVFS]mode:%x,h:%d,margin:%d,l:%d,fps:+%d,l_b:%d,step:%d",
-	dvfs_margin_mode, dvfs_margin_value, gx_fb_dvfs_margin,
-	margin_low_bound, target_fps_margin, dvfs_margin_low_bound,
-	dvfs_min_margin_inc_step);
-#else
-	ged_log_buf_print(ghLogBuf_DVFS,
-		"[GED_K][FB_DVFS] FB DVFS mode, t_gpu: %d, t_gpu_target: %d, gpu_freq_tar: %d, gpu_freq_prev: %d"
-		, t_gpu, t_gpu_target, gpu_freq_tar, gpu_freq_pre);
-#endif
 	g_CommitType = MTK_GPU_DVFS_TYPE_VSYNCBASED;
 	ged_dvfs_gpu_freq_commit((unsigned long)ui32NewFreqID,
 		gpu_freq_tar, GED_DVFS_DEFAULT_COMMIT);
@@ -1249,17 +1208,6 @@ static bool ged_dvfs_policy(
 				(gL_ulCalResetTS_us - g_ulPreDVFS_TS_us);
 
 			if (sentinalLoading > 100) {
-				ged_log_buf_print(ghLogBuf_DVFS,
-		"[GED_K1] g_ulCalResetTS_us: %lu g_ulPreDVFS_TS_us: %lu",
-					gL_ulCalResetTS_us, g_ulPreDVFS_TS_us);
-				ged_log_buf_print(ghLogBuf_DVFS,
-		"[GED_K1] gpu_loading: %u g_ulPreCalResetTS_us:%lu",
-					gpu_loading, gL_ulPreCalResetTS_us);
-				ged_log_buf_print(ghLogBuf_DVFS,
-		"[GED_K1] g_ulWorkingPeriod_us: %lu",
-					gL_ulWorkingPeriod_us);
-				ged_log_buf_print(ghLogBuf_DVFS,
-						"[GED_K1] gpu_av_loading: WTF");
 
 				if (gL_ulWorkingPeriod_us == 0)
 					sentinalLoading = gpu_loading;
@@ -1268,8 +1216,6 @@ static bool ged_dvfs_policy(
 			}
 			gpu_loading = sentinalLoading;
 		} else {
-			ged_log_buf_print(ghLogBuf_DVFS,
-			"[GED_K1] gpu_av_loading: 5566 / %u", gpu_loading);
 			gpu_loading = 0;
 		}
 
@@ -1301,8 +1247,6 @@ static bool ged_dvfs_policy(
 		 MAX(g_Util_Ex.util_3d, g_Util_Ex.util_ta);
 	}
 #endif
-	ged_log_buf_print(ghLogBuf_DVFS,
-		"[GED_K] timer: loading %u", ui32GPULoading);
 
 	/* conventional timer-based policy */
 	if (g_gpu_timer_based_emu) {
@@ -1405,20 +1349,6 @@ static bool ged_dvfs_policy(
 			_init_loading_ud_table();
 		}
 
-#ifdef GED_ENABLE_TIMER_BASED_DVFS_MARGIN
-		ged_log_buf_print(ghLogBuf_DVFS,
-			"[GED_K][LB_DVFS] mode:0x%x, u_b:%d, l_b:%d, margin:%d, gpu_real:%d, gpu_pipe:%d, t_gpu:%d, target:%d, BQ:%llu",
-			g_tb_dvfs_margin_mode,
-			g_tb_dvfs_margin_value,
-			g_tb_dvfs_margin_value_min,
-			gx_tb_dvfs_margin_cur,
-			t_gpu_real,
-			t_gpu_pipe,
-			t_gpu,
-			t_gpu_target,
-			ullWnd);
-#endif
-
 		ui32GPULoading_avg = _loading_avg(ui32GPULoading);
 		if (ui32GPULoading >= 110 - gx_tb_dvfs_margin_cur) {
 #ifdef GED_CONFIGURE_LOADING_BASE_DVFS_STEP
@@ -1439,26 +1369,6 @@ static bool ged_dvfs_policy(
 			loading_ud_table[ui32GPUFreq].down) {
 			i32NewFreqID += 1;
 		}
-#ifdef GED_CONFIGURE_LOADING_BASE_DVFS_STEP
-		ged_log_buf_print(ghLogBuf_DVFS,
-	"[GED_K1] rdy gpu_av_loading:%u, %d(%d)-up:%d,%d, new: %d, step: 0x%x",
-				ui32GPULoading,
-				ui32GPUFreq,
-				loading_ud_table[ui32GPUFreq].freq,
-				loading_ud_table[ui32GPUFreq].up,
-				loading_ud_table[ui32GPUFreq].down,
-				i32NewFreqID,
-				dvfs_step_mode);
-#else
-		ged_log_buf_print(ghLogBuf_DVFS,
-		"[GED_K1] rdy gpu_av_loading: %u, %d(%d)-up:%d,%d, new: %d",
-				ui32GPULoading,
-				ui32GPUFreq,
-				loading_ud_table[ui32GPUFreq].freq,
-				loading_ud_table[ui32GPUFreq].up,
-				loading_ud_table[ui32GPUFreq].down,
-				i32NewFreqID);
-#endif
 		g_CommitType = MTK_GPU_DVFS_TYPE_FALLBACK;
 	}
 
@@ -1913,9 +1823,6 @@ void ged_dvfs_run(unsigned long t, long phase, unsigned long ul3DFenceDoneTime)
 		gpu_loading = 0;
 		gpu_block = 0;
 		gpu_idle = 0;
-		ged_log_buf_print(ghLogBuf_DVFS,
-			"[GED_K][LB_DVFS] skip %s due to gpu_dvfs_enable=%u",
-			__func__, gpu_dvfs_enable);
 		goto EXIT_ged_dvfs_run;
 	}
 
@@ -1945,8 +1852,6 @@ void ged_dvfs_run(unsigned long t, long phase, unsigned long ul3DFenceDoneTime)
 		ged_dvfs_cal_gpu_utilization(&gpu_loading,
 			&gpu_block, &gpu_idle);
 #endif
-		ged_log_buf_print(ghLogBuf_DVFS,
-			"[GED_K][FB_DVFS] fallback mode");
 		spin_unlock_irqrestore(&gsGpuUtilLock, ui32IRQFlags);
 #else
 		ged_dvfs_cal_gpu_utilization(&gpu_loading,

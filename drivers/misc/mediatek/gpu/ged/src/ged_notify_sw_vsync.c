@@ -100,11 +100,7 @@ static int ged_sw_vsync_event(bool bMode)
 		bCurMode = bMode;
 		if (ged_sw_vsync_event_fp) {
 			ret = ged_sw_vsync_event_fp(bMode);
-			ged_log_buf_print(ghLogBuf_DVFS,
-			"[GED_K] ALL mode change to %d ", bCurMode);
-		} else
-			ged_log_buf_print(ghLogBuf_DVFS,
-			"[GED_K] LOCAL mode change to %d ", bCurMode);
+		}
 		if (bCurMode)
 			ret = 1;
 	}
@@ -131,11 +127,6 @@ static void ged_notify_sw_sync_work_handle(struct work_struct *psWork)
 			psNotify->t = temp;
 			ged_dvfs_run(psNotify->t, psNotify->phase,
 				psNotify->ul3DFenceDoneTime);
-			ged_log_buf_print(ghLogBuf_DVFS,
-				"[GED_K] Timer kicked	(ts=%llu) ", temp);
-		} else {
-			ged_log_buf_print(ghLogBuf_DVFS,
-				"[GED_K] Timer kick giveup (ts=%llu)", temp);
 		}
 #endif
 		ged_free(psNotify, sizeof(struct GED_NOTIFY_SW_SYNC));
@@ -207,16 +198,12 @@ void ged_cancel_backup_timer(void)
 		hrtimer_cancel(&g_HT_hwvsync_emu);
 		hrtimer_start(&g_HT_hwvsync_emu,
 			ns_to_ktime(GED_DVFS_TIMER_TIMEOUT), HRTIMER_MODE_REL);
-		ged_log_buf_print(ghLogBuf_DVFS,
-			"[GED_K] Timer Restart (ts=%llu)", temp);
 	} else {
 		/*
 		 * Timer is not existed
 		 */
 		hrtimer_start(&g_HT_hwvsync_emu,
 			ns_to_ktime(GED_DVFS_TIMER_TIMEOUT), HRTIMER_MODE_REL);
-		ged_log_buf_print(ghLogBuf_DVFS,
-			"[GED_K] New Timer Start (ts=%llu)", temp);
 		timer_switch_locked(true);
 	}
 #endif /*	#ifdef ENABLE_TIMER_BACKUP	*/
@@ -252,8 +239,6 @@ GED_ERROR ged_notify_sw_vsync(GED_VSYNC_TYPE eType,
 
 
 	if (g_gpu_timer_based_emu) {
-		ged_log_buf_print(ghLogBuf_DVFS,
-			"[GED_K] Vsync ignored (ts=%llu)", temp);
 #ifndef GED_ENABLE_FB_DVFS
 		return GED_ERROR_INTENTIONAL_BLOCK;
 #endif
@@ -276,16 +261,12 @@ GED_ERROR ged_notify_sw_vsync(GED_VSYNC_TYPE eType,
 			hrtimer_cancel(&g_HT_hwvsync_emu);
 			hrtimer_start(&g_HT_hwvsync_emu,
 			ns_to_ktime(GED_DVFS_TIMER_TIMEOUT), HRTIMER_MODE_REL);
-			ged_log_buf_print(ghLogBuf_DVFS,
-				"[GED_K] Timer Restart (ts=%llu)", temp);
 		} else {
 			/*
 			 * Timer is not existed
 			 */
 			hrtimer_start(&g_HT_hwvsync_emu,
 			ns_to_ktime(GED_DVFS_TIMER_TIMEOUT), HRTIMER_MODE_REL);
-			ged_log_buf_print(ghLogBuf_DVFS,
-				"[GED_K] New Timer Start (ts=%llu)", temp);
 			timer_switch_locked(true);
 		}
 
@@ -310,13 +291,6 @@ GED_ERROR ged_notify_sw_vsync(GED_VSYNC_TYPE eType,
 #endif		///	#ifdef GED_DVFS_DEBUG
 
 
-	if (eType == GED_VSYNC_HW_EVENT)
-		ged_log_buf_print(ghLogBuf_DVFS,
-		"[GED_K] HW VSYNC (ts=%llu) ", hw_vsync_ts);
-	else
-		ged_log_buf_print(ghLogBuf_DVFS,
-		"[GED_K] SW VSYNC (ts=%llu) ", sw_vsync_ts);
-
 	mutex_unlock(&gsVsyncStampLock);
 	/*critical session end*/
 
@@ -337,8 +311,6 @@ GED_ERROR ged_notify_sw_vsync(GED_VSYNC_TYPE eType,
 #ifdef GED_DVFS_DEBUG
 			GED_LOGE("[5566] HW Event: kick!\n");
 #endif							/// GED_DVFS_DEBUG
-			ged_log_buf_print(ghLogBuf_DVFS,
-				"[GED_K] HW VSync: mending kick!");
 			ged_dvfs_run(0, 0, 0);
 		}
 	}
@@ -383,8 +355,6 @@ enum hrtimer_restart ged_sw_vsync_check_cb(struct hrtimer *timer)
 				queue_work(g_psNotifyWorkQueue,
 					&psNotify->sWork);
 			}
-			ged_log_buf_print(ghLogBuf_DVFS,
-				"[GED_K] Timer removed	(ts=%llu) ", temp);
 			return HRTIMER_NORESTART;
 		}
 
@@ -394,8 +364,6 @@ enum hrtimer_restart ged_sw_vsync_check_cb(struct hrtimer *timer)
 			psNotify->phase = GED_DVFS_TIMER_BACKUP;
 			psNotify->ul3DFenceDoneTime = 0;
 			queue_work(g_psNotifyWorkQueue, &psNotify->sWork);
-			ged_log_buf_print(ghLogBuf_DVFS,
-				"[GED_K] Timer queue to kick (ts=%llu)", temp);
 			hrtimer_start(&g_HT_hwvsync_emu,
 			ns_to_ktime(GED_DVFS_TIMER_TIMEOUT), HRTIMER_MODE_REL);
 			g_timer_on_ts = temp;
@@ -418,13 +386,9 @@ void ged_dvfs_gpu_clock_switch_notify(bool bSwitch)
 		g_ns_gpu_on_ts = ged_get_time();
 		g_bGPUClock = true;
 		if (g_timer_on) {
-			ged_log_buf_print(ghLogBuf_DVFS,
-				"[GED_K] Timer Already Start");
 		} else {
 			hrtimer_start(&g_HT_hwvsync_emu,
 			ns_to_ktime(GED_DVFS_TIMER_TIMEOUT), HRTIMER_MODE_REL);
-			ged_log_buf_print(ghLogBuf_DVFS,
-				"[GED_K] HW Start Timer");
 			timer_switch(true);
 		}
 	} else {
@@ -433,7 +397,6 @@ void ged_dvfs_gpu_clock_switch_notify(bool bSwitch)
 #endif
 		ged_gpu_power_off_notified = true;
 		g_bGPUClock = false;
-		ged_log_buf_print(ghLogBuf_DVFS, "[GED_K] Buck-off");
 	}
 }
 EXPORT_SYMBOL(ged_dvfs_gpu_clock_switch_notify);
