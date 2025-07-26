@@ -720,8 +720,6 @@ int set_sched_boost(unsigned int val)
 		else if (val == SCHED_FG_BOOST)
 			sched_set_boost_fg();
 	}
-	printk_deferred("[name:sched_boost&] sched boost: set %d\n",
-			sched_boost_type);
 	mutex_unlock(&sched_boost_mutex);
 
 
