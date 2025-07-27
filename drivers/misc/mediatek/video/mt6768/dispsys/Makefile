@@ -96,10 +96,6 @@ ifeq ($(CONFIG_MMPROFILE),y)
 ccflags-y += -DDEFAULT_MMP_ENABLE
 endif
 
-ifeq ($(MTK_MIRAVISION_SUPPORT), yes)
-    ccflags-y += -DCONFIG_FOR_SOURCE_PQ
-endif
-
 ccflags-y += -DMET_USER_EVENT_SUPPORT
 
 ifeq ($(CONFIG_CUSTOM_KERNEL_HDMI), "MT8193")
