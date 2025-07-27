@@ -4488,7 +4488,7 @@ int bdg_common_init(enum DISP_BDG_ENUM module,
  	clk_buf_disp_ctrl(true);
 	mdelay(2);
 	bdg_tx_pull_6382_reset_pin();
-	mdelay(4);
+	mdelay(3);
 	spislv_init();
 	spislv_switch_speed_hz(SPI_TX_LOW_SPEED_HZ, SPI_RX_LOW_SPEED_HZ);
 
