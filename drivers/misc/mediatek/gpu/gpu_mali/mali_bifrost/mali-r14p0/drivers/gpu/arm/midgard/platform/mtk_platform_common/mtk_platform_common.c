@@ -455,8 +455,8 @@ void proc_mali_unregister(void)
 	mali_pentry = NULL;
 }
 #else
-#define proc_mali_register() do {} while (0)
-#define proc_mali_unregister() do {} while (0)
+#define proc_mali_register() ((void)0)
+#define proc_mali_unregister() ((void)0)
 #endif /* CONFIG_PROC_FS */
 
 int mtk_get_vgpu_power_on_flag(void)

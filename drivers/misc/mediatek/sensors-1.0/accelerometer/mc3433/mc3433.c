@@ -314,9 +314,9 @@ static void mc3xxx_mutex_unlock(void)
 	up(&s_tSemaProtect);
 }
 #else
-	#define mc3xxx_mutex_init()				do {} while (0)
-	#define mc3xxx_mutex_lock()				do {} while (0)
-	#define mc3xxx_mutex_unlock()			  do {} while (0)
+	#define mc3xxx_mutex_init()				((void)0)
+	#define mc3xxx_mutex_lock()				((void)0)
+	#define mc3xxx_mutex_unlock()			  ((void)0)
 #endif
 
 #define IS_MCFM12()	((s_bHWID >= 0xC0) && (s_bHWID <= 0xCF))

@@ -162,7 +162,7 @@ typedef enum {
 		} \
 	}
 #else
-#define ASSERT(expr)    do {} while (0)
+#define ASSERT(expr)    ((void)0)
 #endif
 
 /*******************************************************************************
