@@ -15,6 +15,7 @@
 #define __EXT_WD_DRV_H
 #include <linux/types.h>
 #include <linux/kthread.h> /*define NR_CPUS*/
+#include <linux/cpumask.h>
 #ifdef CONFIG_MTK_WATCHDOG_COMMON
 #include <mt-plat/mtk_wd_api.h>
 #else
@@ -75,12 +76,6 @@ int local_wdt_enable(enum wk_wdt_en en);
 int mtk_local_wdt_misc_config(int bit, int set_value, int *reserved);
 void mpcore_wk_wdt_stop(void);
 extern void dump_wdk_bind_info(void);
-
-#if NR_CPUS == 1
-#define nr_cpu_ids		1
-#else
-extern unsigned int nr_cpu_ids;
-#endif
 
 #define __ENABLE_WDT_SYSFS__
 #ifdef __ENABLE_WDT_SYSFS__
