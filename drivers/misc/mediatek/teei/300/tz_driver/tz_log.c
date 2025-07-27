@@ -118,6 +118,7 @@ static int log_read_line(struct tz_log_state *s, int put, int get)
 
 static void tz_driver_dump_logs(struct tz_log_state *s)
 {
+#if 0
 	struct log_rb *log = s->log;
 	struct boot_log_rb *boot_log = s->boot_log;
 	uint32_t get, put, alloc;
@@ -202,6 +203,7 @@ static void tz_driver_dump_logs(struct tz_log_state *s)
 #endif
 	}
 	s->get = get;
+#endif
 }
 
 int teei_log_fn(void *work)
