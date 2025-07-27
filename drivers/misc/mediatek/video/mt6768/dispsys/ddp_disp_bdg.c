@@ -4484,6 +4484,7 @@ int bdg_common_init(enum DISP_BDG_ENUM module,
 	struct LCM_DSI_PARAMS *tx_params;
 
 	DISPFUNCSTART();
+	mtk_panel_compare();
  	clk_buf_disp_ctrl(true);
 	mdelay(2);
 	bdg_tx_pull_6382_reset_pin();
@@ -4624,6 +4625,7 @@ int bdg_common_init_for_rx_pat(enum DISP_BDG_ENUM module,
 	struct LCM_DSI_PARAMS *tx_params;
 
 	DISPFUNCSTART();
+	mtk_panel_compare();
 
 	DISPSYS_REG = (struct BDG_DISPSYS_CONFIG_REGS *)DISPSYS_BDG_MMSYS_CONFIG_BASE;
 	DSI2_REG = (struct BDG_MIPIDSI2_REGS *)DISPSYS_BDG_MIPIDSI2_DEVICE_BASE;
