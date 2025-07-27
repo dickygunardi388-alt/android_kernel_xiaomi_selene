@@ -347,11 +347,7 @@ void __kasan_report(unsigned long addr, size_t size, bool is_write, unsigned lon
 		dump_stack();
 	}
 
-<<<<<<< HEAD
-	end_report(&flags);
+	end_report(&flags, addr);
 	/* trigger KE to get the KAsan corruption message */
 	BUG();
-=======
-	end_report(&flags, addr);
->>>>>>> phoenix/android-4.14-phoenix
 }

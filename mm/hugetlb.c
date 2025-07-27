@@ -3851,37 +3851,9 @@ retry:
 
 		/* Check for page in userfault range */
 		if (userfaultfd_missing(vma)) {
-<<<<<<< HEAD
-			u32 hash;
-			struct vm_fault vmf = {
-				.vma = vma,
-				.address = address,
-				.flags = flags,
-				.vma_flags = vma->vm_flags,
-				.vma_page_prot = vma->vm_page_prot,
-				/*
-				 * Hard to debug if it ends up being
-				 * used by a callee that assumes
-				 * something about the other
-				 * uninitialized fields... same as in
-				 * memory.c
-				 */
-			};
-
-			/*
-			 * hugetlb_fault_mutex must be dropped before
-			 * handling userfault.  Reacquire after handling
-			 * fault to make calling code simpler.
-			 */
-			hash = hugetlb_fault_mutex_hash(h, mapping, idx);
-			mutex_unlock(&hugetlb_fault_mutex_table[hash]);
-			ret = handle_userfault(&vmf, VM_UFFD_MISSING);
-			mutex_lock(&hugetlb_fault_mutex_table[hash]);
-=======
 			ret = hugetlb_handle_userfault(vma, mapping, h,
 						       idx, flags, address,
 						       VM_UFFD_MISSING);
->>>>>>> phoenix/android-4.14-phoenix
 			goto out;
 		}
 
