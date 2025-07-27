@@ -41,20 +41,6 @@ config TOUCHSCREEN_MTK_SOLOMON
 	  To compile this dirver as a module, choose M here: the
 	  module will be called.
 
-
-config TOUCHSCREEN_MTK_FOCALTECH_TS
-	bool "FOCALTECH_TS for Mediatek package"
-	default n
-	help
-	  Say Y here if you have focaltech_touch touch panel.
-
-	  If unsure, say N.
-
-	  To compile this dirver as a module, choose M here: the
-	  module will be called.
-
-source "drivers/input/touchscreen/mediatek/focaltech_touch/Kconfig"
-
 config TOUCHSCREEN_MTK_GT1151
 	bool "GT1151 for Mediatek package"
 	default n
@@ -148,13 +134,6 @@ config TOUCHSCREEN_MTK_GT911
 	  if you want.
 
 source "drivers/input/touchscreen/mediatek/GT911/Kconfig"
-
-config TOUCHSCREEN_MTK_FOCALTECH_FHD
-	bool "Focaltech FHD Touchscreen"
-	depends on I2C
-	help
-	  Say Y here if you have Focaltech touch panel.
-	  If unsure, say N.
 
 config TOUCHSCREEN_MTK_GT9157
 	bool "GT9157 for Mediatek package"
