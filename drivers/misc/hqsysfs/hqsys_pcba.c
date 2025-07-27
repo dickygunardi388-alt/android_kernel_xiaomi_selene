@@ -155,15 +155,13 @@ static bool read_pcba_config(void)
 	if (board_id_node == NULL) {
 		pr_err("[%s] find board_id node fail \n", __func__);
 		return false;
-	} else
-		pr_err("[%s] find board_id node success %s \n", __func__, board_id_node->name);
+	}
 
 	board_id_dev = of_find_device_by_node(board_id_node);
 	if (board_id_dev == NULL) {
 		pr_err("[%s] find board_id dev fail \n", __func__);
 		return false;
-	} else
-		pr_err("[%s] find board_id dev success %s \n", __func__, board_id_dev->name);
+	}
 
 	hw_id_gpio = of_get_named_gpio(board_id_node, "hw_id-gpios", 0);
 	if (gpio_is_valid(hw_id_gpio)) {
@@ -200,8 +198,7 @@ static bool read_pcba_config(void)
 		ret = PTR_ERR(channel);
 		pr_err("[%s] iio channel not found %d\n", __func__, ret);
 		return false;
-	} else
-		pr_err("[%s] get channel success\n", __func__);
+	}
 
 	if (channel != NULL)
 		ret = iio_read_channel_processed(channel, &auxadc_voltage);
@@ -214,12 +211,11 @@ static bool read_pcba_config(void)
 		pr_err("[%s] IIO channel read failed %d \n", __func__, ret);
 		return false;
 	} else {
-		pr_err("[%s] auxadc_voltage is %d\n", __func__, auxadc_voltage);
+		pr_info("[%s] auxadc_voltage is %d\n", __func__, auxadc_voltage);
 		board_id.voltage = auxadc_voltage * 1500 / 4096;
-		pr_err("[%s] board_id_voltage is %d\n", __func__, board_id.voltage);
+		pr_info("[%s] board_id_voltage is %d\n", __func__, board_id.voltage);
 	}
 
-	pr_err("[%s] read_pcba_config board_id.voltage: %d\n", __func__, board_id.voltage);
 	/*Cause we only have just one version,so its just one version */
 	if (0 == hw_id_gpio_value && 1 == board_id3_gpio_value) {
 		map_size = sizeof(board_id_map)/sizeof(board_id_map_t);
@@ -270,7 +266,7 @@ static bool read_pcba_config(void)
 			huaqin_pcba_config = PCBA_UNKNOW;
 		}
 	}
-	pr_err("[%s] huaqin_pcba_config huaqin_pcba_config: 0x%x\n", __func__, huaqin_pcba_config);
+	pr_info("[%s] huaqin_pcba_config huaqin_pcba_config: 0x%x\n", __func__, huaqin_pcba_config);
 	return true;
 }
 #endif
@@ -327,7 +323,7 @@ EXPORT_SYMBOL_GPL(get_huaqin_pcba_config);
 static int __init huaqin_pcba_early_init(void)
 {
 	int ret;
-	pr_err("[%s]start to register boardId driver\n", __func__);
+	pr_info("[%s]start to register boardId driver\n", __func__);
 
 	ret = platform_driver_register(&boardId_driver);
 	if (ret) {
