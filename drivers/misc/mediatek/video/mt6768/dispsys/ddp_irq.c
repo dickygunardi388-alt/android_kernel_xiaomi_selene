@@ -45,7 +45,6 @@
 
 /* IRQ log print kthread */
 static struct task_struct *disp_irq_log_task;
-static wait_queue_head_t disp_irq_log_wq;
 static int disp_irq_log_module;
 static int disp_irq_rdma_underflow;
 static int irq_init;
@@ -437,9 +436,6 @@ irqreturn_t disp_irq_handler(int irq, void *dev_id)
 
 	disp_invoke_irq_callbacks(module, reg_val);
 
-	if (disp_irq_log_module != 0)
-		wake_up_interruptible(&disp_irq_log_wq);
-
 	return IRQ_HANDLED;
 }
 
@@ -489,28 +485,6 @@ static void disp_irq_rdma_underflow_aee_trigger(void)
 
 }
 
-static int disp_irq_log_kthread_func(void *data)
-{
-	unsigned int i = 0;
-
-	while (1) {
-		wait_event_interruptible(disp_irq_log_wq, disp_irq_log_module);
-		DDPMSG("%s dump intr register: disp_irq_log_module=%d\n",
-		       __func__, disp_irq_log_module);
-		for (i = 0; i < DISP_MODULE_NUM; i++) {
-			if ((disp_irq_log_module & (1 << i)) != 0)
-				ddp_dump_reg(i);
-
-		}
-		disp_irq_log_module = 0;
-
-		/* rdma underflow trigger aee */
-		disp_irq_rdma_underflow_aee_trigger();
-	}
-	return 0;
-}
-
-
 int disp_init_irq(void)
 {
 	if (irq_init)
@@ -518,13 +492,6 @@ int disp_init_irq(void)
 
 	irq_init = 1;
 	DDPMSG("disp_init_irq\n");
-
-	/* create irq log thread */
-	init_waitqueue_head(&disp_irq_log_wq);
-	disp_irq_log_task = kthread_create(disp_irq_log_kthread_func,
-		NULL, "ddp_irq_log_kthread");
-	if (IS_ERR(disp_irq_log_task))
-		DDPERR(" can not create disp_irq_log_task kthread\n");
 
 	/* wake_up_process(disp_irq_log_task); */
 	return 0;
