@@ -26,8 +26,8 @@ ccflags-y += -I$(srctree)/drivers/misc/mediatek/include/mt-plat/$(MTK_PLATFORM)/
 ccflags-y += -I$(srctree)/arch/arm/
 ccflags-y += -I$(srctree)/drivers/iommu/
 
-ccflags-y += -DION_HISTORY_RECORD
-obj-$(CONFIG_MTK_ION) += ion_history.o
+#ccflags-y += -DION_HISTORY_RECORD
+#obj-$(CONFIG_MTK_ION) += ion_history.o
 obj-$(CONFIG_MTK_ION) += ion_comm.o
 
 ifeq ($(CONFIG_MTK_ENG_BUILD), y)
