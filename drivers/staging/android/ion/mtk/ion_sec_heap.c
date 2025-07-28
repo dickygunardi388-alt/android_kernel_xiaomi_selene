@@ -50,15 +50,7 @@
 #include "trusted_mem_api.h"
 #endif
 
-#define ION_DUMP(seq_files, fmt, args...) \
-do {\
-	struct seq_file *file = (struct seq_file *)seq_files;\
-	char *fmat = fmt;\
-	if (file)\
-		seq_printf(file, fmat, ##args);\
-	else\
-		printk(fmat, ##args);\
-} while (0)
+#define ION_DUMP(seq_files, fmt, args...) ((void)0)
 
 struct ion_sec_heap {
 	struct ion_heap heap;

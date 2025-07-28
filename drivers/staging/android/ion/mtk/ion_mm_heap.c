@@ -76,15 +76,7 @@ struct ion_mm_buffer_info {
 	struct mutex lock;/* buffer lock */
 };
 
-#define ION_DUMP(seq_files, fmt, args...) \
-	do {\
-		struct seq_file *file = (struct seq_file *)seq_files;\
-	    char *fmat = fmt;\
-		if (file)\
-			seq_printf(file, fmat, ##args);\
-		else\
-			printk(fmat, ##args);\
-	} while (0)
+#define ION_DUMP(seq_files, fmt, args...) ((void)0)
 
 static unsigned int order_gfp_flags[] = {
 	(GFP_HIGHUSER | __GFP_ZERO | __GFP_NOWARN | __GFP_NORETRY) &

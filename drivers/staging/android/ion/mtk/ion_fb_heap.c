@@ -250,15 +250,7 @@ static struct ion_heap_ops fb_heap_ops = {
 	.unmap_kernel = ion_heap_unmap_kernel,
 };
 
-#define ION_DUMP(seq_files, fmt, args...) \
-do {\
-	struct seq_file *file = (struct seq_file *)seq_files;\
-	char *fmat = fmt;\
-	if (file)\
-		seq_printf(file, fmat, ##args);\
-	else\
-		pr_info(fmat, ##args);\
-} while (0)
+#define ION_DUMP(seq_files, fmt, args...) ((void)0)
 
 static void ion_fb_chunk_show(struct gen_pool *pool,
 			      struct gen_pool_chunk *chunk, void *data)
