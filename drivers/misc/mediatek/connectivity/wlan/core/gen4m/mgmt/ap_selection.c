@@ -59,7 +59,7 @@
 #define CHNL_BSS_NUM_THRESOLD                   100
 #define BSS_STA_CNT_THRESOLD                    30
 #define SCORE_PER_AP                            1
-#define ROAMING_NO_SWING_SCORE_STEP             100
+#define ROAMING_NO_SWING_SCORE_STEP             60
 /* MCS9 at BW 160 requires rssi at least -48dbm */
 #define BEST_RSSI                               -48
 /* MCS7 at 20BW, MCS5 at 40BW, MCS4 at 80BW, MCS3 at 160BW */
@@ -76,7 +76,7 @@
 #if CFG_TC10_FEATURE
 #define RCPI_FOR_DONT_ROAM                      80 /*-70dbm*/
 #else
-#define RCPI_FOR_DONT_ROAM                      60 /*-80dbm*/
+#define RCPI_FOR_DONT_ROAM                      72 /*-74dbm*/
 #endif
 
 /* Real Rssi of a Bss may range in current_rssi - 5 dbm
@@ -87,7 +87,7 @@
 #define HIGH_RSSI_FOR_5G_BAND                   -60 /* dbm */
 
 /* Support driver triggers roaming */
-#define RCPI_DIFF_DRIVER_ROAM			20 /* 10 dbm */
+#define RCPI_DIFF_DRIVER_ROAM			14 /* 7 dbm */
 
 /* In case 2.4G->5G, the trigger rssi is RSSI_BAD_NEED_ROAM_24G_TO_5G
  * In other case(2.4G->2.4G/5G->2.4G/5G->5G), the trigger
@@ -98,7 +98,7 @@
  * other cases.
  */
 #define RSSI_BAD_NEED_ROAM_24G_TO_5G		-10 /* dbm */
-#define RSSI_BAD_NEED_ROAM			-80 /* dbm */
+#define RSSI_BAD_NEED_ROAM			-73 /* dbm */
 
 #define CHNL_DWELL_TIME_DEFAULT  100
 #define CHNL_DWELL_TIME_ONLINE   50

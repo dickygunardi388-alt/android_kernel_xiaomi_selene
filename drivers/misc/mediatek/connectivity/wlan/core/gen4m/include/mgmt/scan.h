@@ -105,7 +105,7 @@
  */
 #define SCN_BSS_DESC_SAME_SSID_THRESHOLD	20
 
-#define SCN_BSS_DESC_STALE_SEC			20 /* Scan Request Timeout */
+#define SCN_BSS_DESC_STALE_SEC			9 /* Scan Request Timeout */
 
 /* For WFD scan need about 15s. */
 #define SCN_BSS_DESC_STALE_SEC_WFD		30
@@ -130,7 +130,7 @@
 #define BITS_OF_BYTE                            (8)
 
 /* dwell time setting, should align FW setting */
-#define SCAN_CHANNEL_DWELL_TIME_MIN_MSEC         (42)
+#define SCAN_CHANNEL_DWELL_TIME_MIN_MSEC         (32)
 
 /* dwell time setting, reduce APP trigger scan dwell time to 20 */
 #define SCAN_CHANNEL_MIN_DWELL_TIME_MSEC_APP	(20)

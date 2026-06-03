@@ -1046,14 +1046,14 @@
  * changed to partial scan. The unit of this value is second
  */
 #define CFG_SUPPORT_FULL2PARTIAL_SCAN      (1)
-#define CFG_SCAN_FULL2PARTIAL_PERIOD       (60)
+#define CFG_SCAN_FULL2PARTIAL_PERIOD       (30)
 
 /*------------------------------------------------------------------------------
  * Value of scan cache result
  *------------------------------------------------------------------------------
  */
 #define CFG_SUPPORT_SCAN_CACHE_RESULT      (1)
-#define CFG_SCAN_CACHE_RESULT_PERIOD       (7000)	/* Unit: ms */
+#define CFG_SCAN_CACHE_RESULT_PERIOD       (3000)	/* Unit: ms */
 #define CFG_SCAN_CACHE_MIN_CHANNEL_NUM     (10)
 
 /*------------------------------------------------------------------------------

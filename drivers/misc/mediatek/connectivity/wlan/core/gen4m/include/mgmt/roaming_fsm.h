@@ -78,8 +78,8 @@
  *******************************************************************************
  */
 /* Roaming Discovery interval, SCAN result need to be updated */
-#define ROAMING_DISCOVER_TIMEOUT_SEC                10	/* Seconds. */
-#define ROAMING_INACTIVE_TIMEOUT_SEC                10	/* Seconds. */
+#define ROAMING_DISCOVER_TIMEOUT_SEC                5	/* Seconds. */
+#define ROAMING_INACTIVE_TIMEOUT_SEC                5	/* Seconds. */
 #if CFG_SUPPORT_ROAMING_SKIP_ONE_AP
 #define ROAMING_ONE_AP_SKIP_TIMES		3
 #endif
