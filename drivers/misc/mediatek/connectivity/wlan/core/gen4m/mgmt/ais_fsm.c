@@ -1880,7 +1880,7 @@ void aisFsmSteps(IN struct ADAPTER *prAdapter,
 			/* using default channel dwell time/timeout value */
 			prScanReqMsg->u2ProbeDelay = 0;
                     	/*K19A code for HQ-140114 by fenghaitao at 2021/6/9 start */
-			prScanReqMsg->u2ChannelDwellTime = 60;
+			prScanReqMsg->u2ChannelDwellTime = 40;
                         /*K19A code for HQ-140114 by fenghaitao at 2021/6/9 end */
 			prScanReqMsg->u2ChannelMinDwellTime = 0;
 			prScanReqMsg->u2TimeoutValue = 0;
