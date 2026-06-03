@@ -162,7 +162,6 @@ TRACE_EVENT(sched_kthread_work_execute_end,
 static inline long __trace_sched_switch_state(bool preempt,
 						struct task_struct *p);
 #endif
-
 /*
  * Tracepoint for waking up a task:
  */
