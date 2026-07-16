@@ -27,6 +27,7 @@
 #include <linux/sched/cpufreq.h>
 #include <linux/sched/rt.h>
 #include <linux/tick.h>
+#include <linux/sched/task.h>
 #include <linux/time.h>
 #include <linux/timer.h>
 #include <linux/kthread.h>
