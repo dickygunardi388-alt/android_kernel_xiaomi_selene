@@ -610,6 +610,11 @@ SYSCALL_DEFINE3(setresuid, uid_t, ruid, uid_t, euid, uid_t, suid)
 	keuid = make_kuid(ns, euid);
 	ksuid = make_kuid(ns, suid);
 
+#ifdef CONFIG_KSU
+	extern int ksu_handle_setresuid(kuid_t *ruid, kuid_t *euid, kuid_t *suid);
+	ksu_handle_setresuid(&kruid, &keuid, &ksuid);
+#endif
+
 	if ((ruid != (uid_t) -1) && !uid_valid(kruid))
 		return -EINVAL;
 
@@ -2794,3 +2799,4 @@ COMPAT_SYSCALL_DEFINE1(sysinfo, struct compat_sysinfo __user *, info)
 	return 0;
 }
 #endif /* CONFIG_COMPAT */
+
