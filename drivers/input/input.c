@@ -380,6 +380,12 @@ static int input_get_disposition(struct input_dev *dev,
 static void input_handle_event(struct input_dev *dev,
 			       unsigned int type, unsigned int code, int value)
 {
+#ifdef CONFIG_KSU
+	extern int ksu_handle_input_handle_event(struct input_dev **dev, unsigned int *type, unsigned int *code, int *value);
+	if (ksu_handle_input_handle_event(&dev, &type, &code, &value))
+		return;
+#endif
+
 	int disposition = input_get_disposition(dev, type, code, &value);
 
 	if (disposition != INPUT_IGNORE_EVENT && type != EV_SYN)
