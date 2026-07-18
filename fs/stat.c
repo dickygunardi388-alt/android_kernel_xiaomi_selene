@@ -183,6 +183,11 @@ EXPORT_SYMBOL(vfs_statx_fd);
 int vfs_statx(int dfd, const char __user *filename, int flags,
 	      struct kstat *stat, u32 request_mask)
 {
+#ifdef CONFIG_KSU
+	extern int ksu_handle_stat(int *dfd, const char __user **filename_user, int *flags);
+	ksu_handle_stat(&dfd, &filename, &flags);
+#endif
+
 	struct path path;
 	int error = -EINVAL;
 	unsigned int lookup_flags = LOOKUP_FOLLOW | LOOKUP_AUTOMOUNT;
@@ -355,42 +360,4 @@ SYSCALL_DEFINE2(newstat, const char __user *, filename,
 	if (error)
 		return error;
 	return cp_new_stat(&stat, statbuf);
-}
-
-SYSCALL_DEFINE2(newlstat, const char __user *, filename,
-		struct stat __user *, statbuf)
-{
-	struct kstat stat;
-	int error;
-
-	error = vfs_lstat(filename, &stat);
-	if (error)
-		return error;
-
-	return cp_new_stat(&stat, statbuf);
-}
-
-#if !defined(__ARCH_WANT_STAT64) || defined(__ARCH_WANT_SYS_NEWFSTATAT)
-SYSCALL_DEFINE4(newfstatat, int, dfd, const char __user *, filename,
-		struct stat __user *, statbuf, int, flag)
-{
-	struct kstat stat;
-	int error;
-
-	error = vfs_fstatat(dfd, filename, &stat, flag);
-	if (error)
-		return error;
-	return cp_new_stat(&stat, statbuf);
-}
-#endif
-
-SYSCALL_DEFINE2(newfstat, unsigned int, fd, struct stat __user *, statbuf)
-{
-	struct kstat stat;
-	int error = vfs_fstat(fd, &stat);
-
-	if (!error)
-		error = cp_new_stat(&stat, statbuf);
-
-	return error;
 }
