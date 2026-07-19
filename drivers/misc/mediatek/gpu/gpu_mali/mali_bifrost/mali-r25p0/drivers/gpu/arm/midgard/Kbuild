@@ -81,6 +81,7 @@ DEFINES += -DMALI_KBASE_BUILD
 /* MTK Add -I$(src)/include to include ddk linux headers: dma-buf-test-exporter.h, memory_group_manager.h, protected_mode_switcher.h */
 ccflags-y += $(DEFINES) -I$(KBASE_PATH)   -I$(KBASE_PLATFORM_PATH) -I$(UMP_PATH) -I$(srctree)/include/linux  -I$(src)/include
 subdir-ccflags-y += $(DEFINES) -I$(KBASE_PATH)   -I$(KBASE_PLATFORM_PATH) -I$(UMP_PATH) -I$(srctree)/include/linux -I$(src)/include
+KBUILD_CFLAGS += -Wno-unknown-warning-option
 
 SRC := \
 	context/mali_kbase_context.c \
