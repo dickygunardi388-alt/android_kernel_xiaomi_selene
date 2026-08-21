@@ -140,19 +140,20 @@ do_gc:
 				break;
 			}
 
-		/* if return value is not zero, no victim was selected */
-		if (f2fs_gc(sbi, sync_mode, true, NULL_SEGNO)) {
-			if (sbi->gc_mode == GC_URGENT)
-				wait_ms = gc_th->urgent_sleep_time;
-			else
-				wait_ms = gc_th->no_gc_sleep_time;
+			/* if return value is not zero, no victim was selected */
+			if (f2fs_gc(sbi, sync_mode, true, NULL_SEGNO)) {
+				if (sbi->gc_mode == GC_URGENT)
+					wait_ms = gc_th->urgent_sleep_time;
+				else
+					wait_ms = gc_th->no_gc_sleep_time;
+			}
+
+			trace_f2fs_background_gc(sbi->sb, wait_ms,
+					prefree_segments(sbi), free_segments(sbi));
+
+			/* balancing f2fs's metadata periodically */
+			f2fs_balance_fs_bg(sbi, true);
 		}
-
-		trace_f2fs_background_gc(sbi->sb, wait_ms,
-				prefree_segments(sbi), free_segments(sbi));
-
-		/* balancing f2fs's metadata periodically */
-		f2fs_balance_fs_bg(sbi, true);
 next:
 		sb_end_write(sbi->sb);
 
