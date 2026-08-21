@@ -16,7 +16,6 @@
 
 #include <linux/mm.h>
 #include <linux/sysinfo.h>
-#include <linux/pagewalk.h>
 #include <linux/sched/mm.h>
 #include <linux/module.h>
 #include <linux/gfp.h>
