@@ -30,4 +30,3 @@ inline unsigned long int_sqrt(unsigned long x)
 #endif
 }
 EXPORT_SYMBOL(int_sqrt64);
-#endif
