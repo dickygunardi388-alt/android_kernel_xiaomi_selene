@@ -16,7 +16,6 @@
 
 #include <linux/mm.h>
 #include <linux/sysinfo.h>
-#include <linux/pagewalk.h>
 #include <linux/sched/mm.h>
 #include <linux/module.h>
 #include <linux/gfp.h>
@@ -70,15 +69,6 @@ struct scan_control {
 
 	/* This context's GFP mask */
 	gfp_t gfp_mask;
-
-	/* The anonymous pages on the current node are below vm.anon_min_kbytes */
-	unsigned int anon_below_min:1;
-
-	/* The clean file pages on the current node are below vm.clean_low_kbytes */
-	unsigned int clean_below_low:1;
-
-	/* The clean file pages on the current node are below vm.clean_min_kbytes */
-	unsigned int clean_below_min:1;
 
 	/* Allocation order */
 	int order;
@@ -2342,53 +2332,6 @@ static bool swap_is_allowed(void)
 }
 #endif
 
-static void prepare_workingset_protection(pg_data_t *pgdat, struct scan_control *sc)
-{
-	/*
-	 * Check the number of anonymous pages to protect them from
-	 * reclaiming if their amount is below the specified.
-	 */
-	if (sysctl_anon_min_kbytes) {
-		unsigned long reclaimable_anon;
-
-		reclaimable_anon =
-			node_page_state(pgdat, NR_ACTIVE_ANON) +
-			node_page_state(pgdat, NR_INACTIVE_ANON) +
-			node_page_state(pgdat, NR_ISOLATED_ANON);
-		reclaimable_anon <<= (PAGE_SHIFT - 10);
-
-		sc->anon_below_min = reclaimable_anon < sysctl_anon_min_kbytes;
-	} else
-		sc->anon_below_min = 0;
-
-	/*
-	 * Check the number of clean file pages to protect them from
-	 * reclaiming if their amount is below the specified.
-	 */
-	if (sysctl_clean_low_kbytes || sysctl_clean_min_kbytes) {
-		unsigned long reclaimable_file, dirty, clean;
-
-		reclaimable_file =
-			node_page_state(pgdat, NR_ACTIVE_FILE) +
-			node_page_state(pgdat, NR_INACTIVE_FILE) +
-			node_page_state(pgdat, NR_ISOLATED_FILE);
-		dirty = node_page_state(pgdat, NR_FILE_DIRTY);
-		/*
-		 * node_page_state() sum can go out of sync since
-		 * all the values are not read at once.
-		 */
-		if (likely(reclaimable_file > dirty))
-			clean = (reclaimable_file - dirty) << (PAGE_SHIFT - 10);
-		else
-			clean = 0;
-
-		sc->clean_below_low = clean < sysctl_clean_low_kbytes;
-		sc->clean_below_min = clean < sysctl_clean_min_kbytes;
-	} else {
-		sc->clean_below_low = 0;
-		sc->clean_below_min = 0;
-	}
-}
 
 enum scan_balance {
 	SCAN_EQUAL,
@@ -2406,6 +2349,9 @@ enum scan_balance {
  * nr[0] = anon inactive pages to scan; nr[1] = anon active pages to scan
  * nr[2] = file inactive pages to scan; nr[3] = file active pages to scan
  */
+ 
+ static void prepare_workingset_protection(pg_data_t *pgdat, struct scan_control *sc);
+
 static void get_scan_count(struct lruvec *lruvec, struct mem_cgroup *memcg,
 			   struct scan_control *sc, unsigned long *nr,
 			   unsigned long *lru_pages)
@@ -5400,11 +5346,11 @@ late_initcall(init_lru_gen);
 
 #else
 
-static void lru_gen_age_node(struct pglist_data *pgdat, struct scan_control *sc)
+static inline void lru_gen_age_node(struct pglist_data *pgdat, struct scan_control *sc)
 {
 }
 
-static unsigned long lru_gen_shrink_lruvec(struct lruvec *lruvec, struct scan_control *sc)
+static inline unsigned long lru_gen_shrink_lruvec(struct lruvec *lruvec, struct scan_control *sc)
 {
 	return 0;
 }
