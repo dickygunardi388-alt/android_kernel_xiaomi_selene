@@ -20,7 +20,7 @@
 #include <linux/uaccess.h>
 #include <linux/mm_inline.h>
 #include <linux/sched/signal.h>
-#include <fs/nomount.h>
+
 #include <asm/elf.h>
 #include <asm/tlb.h>
 #include <asm/tlbflush.h>
@@ -503,6 +503,10 @@ extern void susfs_sus_kstat_spoof_show_map_vma(struct inode *inode, dev_t *out_d
 #endif
 #ifdef CONFIG_KSU_SUSFS_OPEN_REDIRECT
 extern int susfs_open_redirect_spoof_show_map_vma(struct inode *inode, unsigned long *out_ino, dev_t *out_dev, char **spoofed_name);
+#endif
+
+#ifdef CONFIG_NOMOUNT
+extern void nomount_spoof_mmap_metadata(struct inode *inode, dev_t *dev, unsigned long *ino);
 #endif
 
 static void
